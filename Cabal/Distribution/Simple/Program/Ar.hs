@@ -87,7 +87,8 @@ createArLibArchive verbosity lbi targetPath files = do
                    simple (initial, middle, final) files ]
 
   when stripLib $ Strip.stripLib verbosity platform progConf tmpPath
-  unless (hostArch == Arm) $ -- See #1537
+  unless (hostArch == Arm -- See #1537
+          || hostOS == AIX) $ -- AIX uses its own "ar" format variant
     wipeMetadata tmpPath
   equal <- filesEqual tmpPath targetPath
   unless equal $ renameFile tmpPath targetPath
