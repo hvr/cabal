@@ -1072,7 +1072,7 @@ buildAndInstallUnpackedPackage verbosity
         ElabComponent comp -> prettyShow pkgid
             ++ " (" ++ maybe "custom" prettyShow (compComponentName comp) ++ ")"
 
-    noticeProgress phase = when isParallelBuild $
+    noticeProgress phase = when (isJust mlogFile || isParallelBuild) $
         progressMessage verbosity phase dispname
 
     isParallelBuild = buildSettingNumJobs >= 2
