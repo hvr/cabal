@@ -59,7 +59,8 @@ import qualified Distribution.Client.Tar as Tar
 import           Distribution.Client.Setup (filterConfigureFlags)
 import           Distribution.Client.SourceFiles
 import           Distribution.Client.SrcDist (allPackageSourceFiles)
-import           Distribution.Client.Utils (removeExistingFile)
+import           Distribution.Client.Utils (removeExistingFile,
+                                            progressMessage, ProgressPhase(..) )
 
 import           Distribution.Package hiding (InstalledPackageId, installedPackageId)
 import qualified Distribution.PackageDescription as PD
@@ -904,25 +905,18 @@ buildAndInstallUnpackedPackage verbosity
     --TODO: [required feature] docs and tests
     --TODO: [required feature] sudo re-exec
 
-    let dispname = case elabPkgOrComp pkg of
-            ElabPackage _ -> display pkgid
-                ++ " (all, legacy fallback)"
-            ElabComponent comp -> display pkgid
-                ++ " (" ++ maybe "custom" display (compComponentName comp) ++ ")"
-
     -- Configure phase
-    when isParallelBuild $
-      notice verbosity $ "Configuring " ++ dispname ++ "..."
+    showProgress ProgressConfiguring
     annotateFailure mlogFile ConfigureFailed $
       setup' configureCommand configureFlags configureArgs
 
     -- Build phase
-    when isParallelBuild $
-      notice verbosity $ "Building " ++ dispname ++ "..."
+    showProgress ProgressBuilding
     annotateFailure mlogFile BuildFailed $
       setup buildCommand buildFlags
 
     -- Install phase
+    showProgress ProgressInstalling
     annotateFailure mlogFile InstallFailed $ do
 
       let copyPkgFiles tmpDir = do
@@ -979,6 +973,8 @@ buildAndInstallUnpackedPackage verbosity
     let docsResult  = DocsNotTried
         testsResult = TestsNotTried
 
+    showProgress ProgressFinished
+
     return BuildResult {
        buildResultDocs    = docsResult,
        buildResultTests   = testsResult,
@@ -989,6 +985,16 @@ buildAndInstallUnpackedPackage verbosity
     pkgid  = packageId rpkg
     uid    = installedUnitId rpkg
     compid = compilerId compiler
+
+    dispname = case elabPkgOrComp pkg of
+        ElabPackage _ -> display pkgid
+            ++ " (all, due to Custom setup)"
+        ElabComponent comp -> display pkgid
+            ++ " (" ++ maybe "custom" display (compComponentName comp) ++ ")"
+
+    showProgress ph =
+      when (isJust mlogFile || isParallelBuild) $
+        progressMessage verbosity ph dispname
 
     isParallelBuild = buildSettingNumJobs >= 2
 

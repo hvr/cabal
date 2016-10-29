@@ -17,6 +17,7 @@ module Distribution.Client.Utils ( MergeResult(..)
                                  , moreRecentFile, existsAndIsMoreRecentThan
                                  , tryFindAddSourcePackageDesc
                                  , tryFindPackageDesc
+                                 , progressMessage, ProgressPhase(..)
                                  , relaxEncodingErrors)
        where
 
@@ -28,7 +29,7 @@ import Distribution.Compat.Exception   ( catchIO )
 import Distribution.Compat.Time ( getModTime )
 import Distribution.Simple.Setup       ( Flag(..) )
 import Distribution.Verbosity
-import Distribution.Simple.Utils       ( die', findPackageDesc )
+import Distribution.Simple.Utils       ( die', findPackageDesc, noticeNoWrap )
 import qualified Data.ByteString.Lazy as BS
 import Data.Bits
          ( (.|.), shiftL, shiftR )
@@ -313,3 +314,24 @@ tryFindPackageDesc verbosity depPath err = do
     case errOrCabalFile of
         Right file -> return file
         Left _ -> die' verbosity err
+
+
+data ProgressPhase
+    = ProgressDownloading
+    | ProgressDownloaded
+    | ProgressConfiguring
+    | ProgressBuilding
+    | ProgressInstalling
+    | ProgressFinished
+
+progressMessage :: Verbosity -> ProgressPhase -> String -> IO ()
+progressMessage verbosity phase subject = do
+    noticeNoWrap verbosity $ phase' ++ subject ++ "\n"
+  where
+    phase' = case phase of
+               ProgressDownloading -> "Downloading  "
+               ProgressDownloaded  -> "Downloaded   "
+               ProgressConfiguring -> "Configuring  "
+               ProgressBuilding    -> "Building     "
+               ProgressInstalling  -> "Installing   "
+               ProgressFinished    -> "Finished     "
