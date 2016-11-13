@@ -986,10 +986,13 @@ buildAndInstallUnpackedPackage verbosity
     uid    = installedUnitId rpkg
     compid = compilerId compiler
 
+    -- FIXME: attach to flag
+    dispid = uid
+
     dispname = case elabPkgOrComp pkg of
-        ElabPackage _ -> display pkgid
+        ElabPackage _ -> display dispid
             ++ " (all, due to Custom setup)"
-        ElabComponent comp -> display pkgid
+        ElabComponent comp -> display dispid
             ++ " (" ++ maybe "custom" display (compComponentName comp) ++ ")"
 
     showProgress ph =
