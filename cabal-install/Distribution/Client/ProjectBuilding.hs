@@ -1066,10 +1066,13 @@ buildAndInstallUnpackedPackage verbosity
     uid    = installedUnitId rpkg
     compid = compilerId compiler
 
+    -- FIXME: attach to flag
+    dispid = uid
+
     dispname = case elabPkgOrComp pkg of
-        ElabPackage _ -> prettyShow pkgid
+        ElabPackage _ -> prettyShow dispid
             ++ " (all, legacy fallback)"
-        ElabComponent comp -> prettyShow pkgid
+        ElabComponent comp -> prettyShow dispid
             ++ " (" ++ maybe "custom" prettyShow (compComponentName comp) ++ ")"
 
     noticeProgress phase = when (isJust mlogFile || isParallelBuild) $

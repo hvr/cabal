@@ -872,11 +872,11 @@ printPlan verbosity
 
     showPkgAndReason :: ElaboratedReadyPackage -> String
     showPkgAndReason (ReadyPackage elab) =
-      " - " ++
-      (if verbosity >= deafening
-        then prettyShow (installedUnitId elab)
-        else prettyShow (packageId elab)
-        ) ++
+      " - " ++ prettyShow (packageId elab) ++ " {" ++ prettyShow (installedUnitId elab) ++ "}" ++
+      -- (if verbosity >= deafening
+      --   then prettyShow (installedUnitId elab)
+      --   else prettyShow (packageId elab)
+      --   ) ++
       (case elabPkgOrComp elab of
           ElabPackage pkg -> showTargets elab ++ ifVerbose (showStanzas pkg)
           ElabComponent comp ->
