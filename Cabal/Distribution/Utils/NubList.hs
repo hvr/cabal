@@ -74,6 +74,10 @@ instance (Ord a, Binary a) => Binary (NubList a) where
     put (NubList l) = put l
     get = fmap toNubList get
 
+instance (Ord a, Serialise a) => Serialise (NubList a) where
+    encode (NubList l) = encode l
+    decode = fmap toNubList decode
+
 -- | NubListR : A right-biased version of 'NubList'. That is @toNubListR
 -- ["-XNoFoo", "-XFoo", "-XNoFoo"]@ will result in @["-XFoo", "-XNoFoo"]@,
 -- unlike the normal 'NubList', which is left-biased. Built on top of

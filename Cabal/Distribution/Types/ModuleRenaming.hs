@@ -65,7 +65,9 @@ isDefaultRenaming :: ModuleRenaming -> Bool
 isDefaultRenaming DefaultRenaming = True
 isDefaultRenaming _ = False
 
-instance Binary ModuleRenaming where
+instance Serialise ModuleRenaming
+
+instance Binary ModuleRenaming
 
 -- NB: parentheses are mandatory, because later we may extend this syntax
 -- to allow "hiding (A, B)" or other modifier words.

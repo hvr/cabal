@@ -93,12 +93,12 @@ import           Distribution.Simple.Utils (ordNub)
 import           Data.Map (Map)
 import           Data.Set (Set)
 import qualified Data.ByteString.Lazy as LBS
-import           Distribution.Compat.Binary
 import           GHC.Generics (Generic)
 import qualified Data.Monoid as Mon
 import           Data.Typeable
 import           Control.Monad
 
+import Codec.Serialise (Serialise(..))
 
 
 -- | The combination of an elaborated install plan plus a
@@ -142,7 +142,7 @@ data ElaboratedSharedConfig
   deriving (Show, Generic, Typeable)
   --TODO: [code cleanup] no Eq instance
 
-instance Binary ElaboratedSharedConfig
+instance Serialise ElaboratedSharedConfig
 
 data ElaboratedConfiguredPackage
    = ElaboratedConfiguredPackage {
@@ -351,14 +351,14 @@ instance IsNode ElaboratedConfiguredPackage where
     nodeKey = elabUnitId
     nodeNeighbors = elabOrderDependencies
 
-instance Binary ElaboratedConfiguredPackage
+instance Serialise ElaboratedConfiguredPackage
 
 data ElaboratedPackageOrComponent
     = ElabPackage   ElaboratedPackage
     | ElabComponent ElaboratedComponent
   deriving (Eq, Show, Generic)
 
-instance Binary ElaboratedPackageOrComponent
+instance Serialise ElaboratedPackageOrComponent
 
 elabComponentName :: ElaboratedConfiguredPackage -> Maybe ComponentName
 elabComponentName elab =
@@ -543,7 +543,7 @@ data ElaboratedComponent
    }
   deriving (Eq, Show, Generic)
 
-instance Binary ElaboratedComponent
+instance Serialise ElaboratedComponent
 
 -- | See 'elabOrderDependencies'.
 compOrderDependencies :: ElaboratedComponent -> [UnitId]
@@ -591,7 +591,7 @@ data ElaboratedPackage
      }
   deriving (Eq, Show, Generic)
 
-instance Binary ElaboratedPackage
+instance Serialise ElaboratedPackage
 
 -- | See 'elabOrderDependencies'.  This gives the unflattened version,
 -- which can be useful in some circumstances.
@@ -622,7 +622,7 @@ data BuildStyle =
   | BuildInplaceOnly
   deriving (Eq, Show, Generic)
 
-instance Binary BuildStyle
+instance Serialise BuildStyle
 
 type CabalFileText = LBS.ByteString
 
@@ -639,7 +639,7 @@ type ElaboratedReadyPackage = GenericReadyPackage ElaboratedConfiguredPackage
 data ComponentTarget = ComponentTarget ComponentName SubComponentTarget
   deriving (Eq, Ord, Show, Generic)
 
-instance Binary ComponentTarget
+instance Serialise ComponentTarget
 
 -- | Unambiguously render a 'ComponentTarget', e.g., to pass
 -- to a Cabal Setup script.
@@ -693,5 +693,5 @@ data SetupScriptStyle = SetupCustomExplicitDeps
                       | SetupNonCustomInternalLib
   deriving (Eq, Show, Generic, Typeable)
 
-instance Binary SetupScriptStyle
+instance Serialise SetupScriptStyle
 

@@ -29,6 +29,8 @@ data ComponentName = CLibName
                    | CBenchName UnqualComponentName
                    deriving (Eq, Generic, Ord, Read, Show, Typeable)
 
+instance Serialise ComponentName
+
 instance Binary ComponentName
 
 -- Build-target-ish syntax

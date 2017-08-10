@@ -300,6 +300,7 @@ library
         base       >= 4.5      && < 5,
         base16-bytestring >= 0.1.1 && < 0.2,
         binary     >= 0.5      && < 0.9,
+        serialise  == 0.1.*,
         bytestring >= 0.9      && < 1,
         Cabal      >= 2.1      && < 2.2,
         containers >= 0.4      && < 0.6,
@@ -318,6 +319,7 @@ library
         time       >= 1.4      && < 1.9,
         zlib       >= 0.5.3    && < 0.7,
         hackage-security >= 0.5.2.2 && < 0.6
+
 
     if flag(old-bytestring)
       build-depends: bytestring <  0.10.2, bytestring-builder >= 0.10 && < 1
@@ -394,6 +396,7 @@ executable cabal
             base       >= 4.5      && < 5,
             base16-bytestring >= 0.1.1 && < 0.2,
             binary     >= 0.5      && < 0.9,
+            serialise  == 0.1.*,
             bytestring >= 0.9      && < 1,
             Cabal      >= 2.1      && < 2.2,
             containers >= 0.4      && < 0.6,

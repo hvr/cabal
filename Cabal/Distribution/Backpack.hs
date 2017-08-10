@@ -98,6 +98,7 @@ data OpenUnitId
 -- TODO: cache holes?
 
 instance Binary OpenUnitId
+instance Serialise OpenUnitId
 
 instance NFData OpenUnitId where
     rnf (IndefFullUnitId cid subst) = rnf cid `seq` rnf subst
@@ -155,6 +156,7 @@ data OpenModule
   deriving (Generic, Read, Show, Eq, Ord, Typeable, Data)
 
 instance Binary OpenModule
+instance Serialise OpenModule
 
 instance NFData OpenModule where
     rnf (OpenModule uid mod_name) = rnf uid `seq` rnf mod_name

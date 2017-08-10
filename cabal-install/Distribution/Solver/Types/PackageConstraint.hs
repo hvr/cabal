@@ -18,7 +18,7 @@ module Distribution.Solver.Types.PackageConstraint (
     packageConstraintToDependency
   ) where
 
-import Distribution.Compat.Binary      (Binary(..))
+import Codec.Serialise                 (Serialise)
 import Distribution.Package            (PackageName)
 import Distribution.PackageDescription (FlagAssignment, dispFlagAssignment)
 import Distribution.Types.Dependency   (Dependency(..))
@@ -99,7 +99,7 @@ data PackageProperty
    | PackagePropertyStanzas   [OptionalStanza]
   deriving (Eq, Show, Generic)
 
-instance Binary PackageProperty
+instance Serialise PackageProperty
 
 -- | Pretty-prints a package property.
 dispPackageProperty :: PackageProperty -> Disp.Doc

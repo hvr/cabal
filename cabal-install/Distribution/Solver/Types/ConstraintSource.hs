@@ -5,7 +5,7 @@ module Distribution.Solver.Types.ConstraintSource
     ) where
 
 import GHC.Generics (Generic)
-import Distribution.Compat.Binary (Binary(..))
+import Codec.Serialise (Serialise)
 
 -- | Source of a 'PackageConstraint'.
 data ConstraintSource =
@@ -51,7 +51,7 @@ data ConstraintSource =
   | ConstraintSetupCabalMinVersion
   deriving (Eq, Show, Generic)
 
-instance Binary ConstraintSource
+instance Serialise ConstraintSource
 
 -- | Description of a 'ConstraintSource'.
 showConstraintSource :: ConstraintSource -> String

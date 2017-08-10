@@ -25,6 +25,7 @@ data PkgconfigDependency = PkgconfigDependency
                          deriving (Generic, Read, Show, Eq, Typeable, Data)
 
 instance Binary PkgconfigDependency
+instance Serialise PkgconfigDependency
 instance NFData PkgconfigDependency where rnf = genericRnf
 
 instance Text PkgconfigDependency where

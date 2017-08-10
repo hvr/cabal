@@ -100,7 +100,6 @@ import Data.ByteString.Lazy (ByteString)
 import Distribution.Client.GZipUtils (maybeDecompress)
 import Distribution.Client.Utils ( byteStringToFilePath
                                  , tryFindAddSourcePackageDesc )
-import Distribution.Compat.Binary
 import Distribution.Compat.Exception (catchIO)
 import Distribution.Compat.Time (getFileAge, getModTime)
 import System.Directory (doesFileExist, doesDirectoryExist)
@@ -114,6 +113,8 @@ import System.IO.Error (isDoesNotExistError)
 
 import qualified Hackage.Security.Client    as Sec
 import qualified Hackage.Security.Util.Some as Sec
+
+import Codec.Serialise -- (Serialise(..))
 
 -- | Reduced-verbosity version of 'Configure.getInstalledPackages'
 getInstalledPackages :: Verbosity -> Compiler
@@ -400,7 +401,7 @@ data PackageEntry =
 data BuildTreeRefType = SnapshotRef | LinkRef
                       deriving (Eq,Generic)
 
-instance Binary BuildTreeRefType
+instance Serialise BuildTreeRefType
 
 refTypeFromTypeCode :: Tar.TypeCode -> BuildTreeRefType
 refTypeFromTypeCode t
@@ -787,11 +788,16 @@ readIndexCache' index
   | is01Index index = decodeFileOrFail' (cacheFile index)
   | otherwise       = liftM (Right .read00IndexCache) $
                       BSS.readFile (cacheFile index)
+  where
+    decodeFileOrFail' :: FilePath -> IO (Either String Cache)
+    decodeFileOrFail' fp = do
+        tmp <- BS.readFile fp
+        pure $ either (Left . show) Right $ deserialiseOrFail tmp
 
 -- | Write the 'Index' cache to the filesystem
 writeIndexCache :: Index -> Cache -> IO ()
 writeIndexCache index cache
-  | is01Index index = encodeFile (cacheFile index) cache
+  | is01Index index = writeFileSerialise (cacheFile index) cache
   | otherwise       = writeFile (cacheFile index) (show00IndexCache cache)
 
 -- | Write the 'IndexState' to the filesystem
@@ -858,7 +864,7 @@ data Cache = Cache
       -- violated, this corresponds to the last (seen) 'Timestamp' in
       -- 'cacheEntries'
     , cacheEntries :: [IndexCacheEntry]
-    }
+    } deriving (Generic)
 
 instance NFData Cache where
     rnf = rnf . cacheEntries
@@ -889,24 +895,22 @@ cacheEntryTimestamp (CachePackageId _ _ ts)  = ts
 ----------------------------------------------------------------------------
 -- new binary 01-index.cache format
 
-instance Binary Cache where
-    put (Cache headTs ents) = do
+instance Serialise Cache where
+    encode (Cache headTs ents) = do
         -- magic / format version
         --
         -- NB: this currently encodes word-size implicitly; when we
         -- switch to CBOR encoding, we will have a platform
         -- independent binary encoding
-        put (0xcaba1002::Word)
-        put headTs
-        put ents
+        encode (0xcaba1002::Word, headTs, ents)
 
-    get = do
-        magic <- get
+    decode = do
+        (magic, headTs, ents) <- decode
         when (magic /= (0xcaba1002::Word)) $
             fail ("01-index.cache: unexpected magic marker encountered: " ++ show magic)
-        Cache <$> get <*> get
+        pure (Cache headTs ents)
 
-instance Binary IndexCacheEntry
+instance Serialise IndexCacheEntry
 
 ----------------------------------------------------------------------------
 -- legacy 00-index.cache format

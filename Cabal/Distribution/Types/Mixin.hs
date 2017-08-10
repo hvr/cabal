@@ -20,6 +20,7 @@ data Mixin = Mixin { mixinPackageName :: PackageName
     deriving (Show, Read, Eq, Ord, Typeable, Data, Generic)
 
 instance Binary Mixin
+instance Serialise Mixin
 
 instance Text Mixin where
     disp (Mixin pkg_name incl) =

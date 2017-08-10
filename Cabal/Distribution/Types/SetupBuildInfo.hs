@@ -27,6 +27,8 @@ data SetupBuildInfo = SetupBuildInfo {
     }
     deriving (Generic, Show, Eq, Read, Typeable, Data)
 
+instance Serialise SetupBuildInfo
+
 instance Binary SetupBuildInfo
 
 instance Monoid SetupBuildInfo where

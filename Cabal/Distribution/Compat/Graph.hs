@@ -140,6 +140,10 @@ instance (IsNode a, Binary a, Show (Key a)) => Binary (Graph a) where
     put x = put (toList x)
     get = fmap fromDistinctList get
 
+instance (IsNode a, Serialise a, Show (Key a)) => Serialise (Graph a) where
+    encode = encode . toList
+    decode = fmap fromDistinctList decode
+
 instance (Eq (Key a), Eq a) => Eq (Graph a) where
     g1 == g2 = graphMap g1 == graphMap g2
 
@@ -270,13 +274,13 @@ unionLeft = flip unionRight
 -- | /Ω(V + E)/. Compute the strongly connected components of a graph.
 -- Requires amortized construction of graph.
 stronglyConnComp :: Graph a -> [SCC a]
-stronglyConnComp g = map decode forest
+stronglyConnComp g = map decode' forest
   where
     forest = G.scc (graphForward g)
-    decode (Tree.Node v [])
+    decode' (Tree.Node v [])
         | mentions_itself v = CyclicSCC  [graphVertexToNode g v]
         | otherwise         = AcyclicSCC (graphVertexToNode g v)
-    decode other = CyclicSCC (dec other [])
+    decode' other = CyclicSCC (dec other [])
         where dec (Tree.Node v ts) vs
                 = graphVertexToNode g v : foldr dec vs ts
     mentions_itself v = v `elem` (graphForward g ! v)

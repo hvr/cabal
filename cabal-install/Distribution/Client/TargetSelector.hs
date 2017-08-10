@@ -78,7 +78,7 @@ import Data.Maybe
          ( maybeToList )
 import Data.Ord
          ( comparing )
-import Distribution.Compat.Binary (Binary)
+import Codec.Serialise (Serialise)
 import GHC.Generics (Generic)
 #if MIN_VERSION_containers(0,5,0)
 import qualified Data.Map.Lazy   as Map.Lazy
@@ -183,7 +183,7 @@ data SubComponentTarget =
    | FileTarget   FilePath
   deriving (Eq, Ord, Show, Generic)
 
-instance Binary SubComponentTarget
+instance Serialise SubComponentTarget
 
 
 -- ------------------------------------------------------------

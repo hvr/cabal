@@ -56,6 +56,8 @@ data Language =
   | UnknownLanguage String
   deriving (Generic, Show, Read, Eq, Typeable, Data)
 
+instance Serialise Language
+
 instance Binary Language
 
 knownLanguages :: [Language]
@@ -105,6 +107,8 @@ data Extension =
   | UnknownExtension String
 
   deriving (Generic, Show, Read, Eq, Ord, Typeable, Data)
+
+instance Serialise Extension
 
 instance Binary Extension
 
@@ -788,6 +792,8 @@ data KnownExtension =
   | TypeFamilyDependencies
 
   deriving (Generic, Show, Read, Eq, Ord, Enum, Bounded, Typeable, Data)
+
+instance Serialise KnownExtension
 
 instance Binary KnownExtension
 

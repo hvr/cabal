@@ -68,6 +68,7 @@ newtype UnitId = UnitId ShortText
 type InstalledPackageId = UnitId
 
 instance Binary UnitId
+instance Serialise UnitId
 
 -- | The textual format for 'UnitId' coincides with the format
 -- GHC accepts for @-package-id@.
@@ -109,7 +110,7 @@ getHSLibraryName uid = "HS" ++ display uid
 -- that a 'UnitId' identified this way is definite; i.e., it has no
 -- unfilled holes.
 newtype DefUnitId = DefUnitId { unDefUnitId :: UnitId }
-  deriving (Generic, Read, Show, Eq, Ord, Typeable, Data, Binary, NFData, Text)
+  deriving (Generic, Read, Show, Eq, Ord, Typeable, Data, Binary, Serialise, NFData, Text)
 
 -- | Unsafely create a 'DefUnitId' from a 'UnitId'.  Your responsibility
 -- is to ensure that the 'DefUnitId' invariant holds.

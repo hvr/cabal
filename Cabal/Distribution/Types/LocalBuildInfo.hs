@@ -160,6 +160,8 @@ data LocalBuildInfo = LocalBuildInfo {
         relocatable   :: Bool --  ^Whether to build a relocatable package
   } deriving (Generic, Read, Show)
 
+instance Serialise LocalBuildInfo
+
 instance Binary LocalBuildInfo
 
 -------------------------------------------------------------------------------

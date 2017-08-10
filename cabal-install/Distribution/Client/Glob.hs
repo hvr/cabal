@@ -29,6 +29,7 @@ import qualified Text.PrettyPrint as Disp
 import           System.FilePath
 import           System.Directory
 
+import           Codec.Serialise
 
 -- | A file path specified by globbing
 --
@@ -56,11 +57,10 @@ data FilePathRoot
    | FilePathHomeDir
   deriving (Eq, Show, Generic)
 
-instance Binary FilePathGlob
-instance Binary FilePathRoot
-instance Binary FilePathGlobRel
-instance Binary GlobPiece
-
+instance Serialise FilePathGlob
+instance Serialise FilePathRoot
+instance Serialise FilePathGlobRel
+instance Serialise GlobPiece
 
 -- | Check if a 'FilePathGlob' doesn't actually make use of any globbing and
 -- is in fact equivalent to a non-glob 'FilePath'.

@@ -36,6 +36,7 @@ depVerRange :: Dependency -> VersionRange
 depVerRange (Dependency _ vr) = vr
 
 instance Binary Dependency
+instance Serialise Dependency
 instance NFData Dependency where rnf = genericRnf
 
 instance Text Dependency where

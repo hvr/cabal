@@ -1509,7 +1509,7 @@ data InstallFlags = InstallFlags {
   }
   deriving (Eq, Generic)
 
-instance Binary InstallFlags
+instance Serialise InstallFlags
 
 defaultInstallFlags :: InstallFlags
 defaultInstallFlags = InstallFlags {

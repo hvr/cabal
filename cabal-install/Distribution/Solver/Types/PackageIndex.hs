@@ -61,6 +61,7 @@ import Distribution.Version
 import Distribution.Simple.Utils
          ( lowercase, comparing )
 
+import Codec.Serialise (Serialise)
 
 -- | The collection of information about packages from one or more 'PackageDB's.
 --
@@ -88,7 +89,7 @@ instance Package pkg => Monoid (PackageIndex pkg) where
   mconcat [] = mempty
   mconcat xs = foldr1 mappend xs
 
-instance Binary pkg => Binary (PackageIndex pkg)
+instance Serialise pkg => Serialise (PackageIndex pkg)
 
 invariant :: Package pkg => PackageIndex pkg -> Bool
 invariant (PackageIndex m) = all (uncurry goodBucket) (Map.toList m)

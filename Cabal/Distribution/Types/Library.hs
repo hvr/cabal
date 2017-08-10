@@ -27,6 +27,8 @@ data Library = Library {
     }
     deriving (Generic, Show, Eq, Read, Typeable, Data)
 
+instance Serialise Library
+
 instance Binary Library
 
 instance Monoid Library where

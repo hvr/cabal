@@ -28,6 +28,7 @@ data Module =
     deriving (Generic, Read, Show, Eq, Ord, Typeable, Data)
 
 instance Binary Module
+instance Serialise Module
 
 instance Text Module where
     disp (Module uid mod_name) =

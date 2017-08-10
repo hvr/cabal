@@ -132,6 +132,7 @@ defaultDistPref = "dist"
 data Flag a = Flag a | NoFlag deriving (Eq, Generic, Show, Read)
 
 instance Binary a => Binary (Flag a)
+instance Serialise a => Serialise (Flag a)
 
 instance Functor Flag where
   fmap f (Flag x) = Flag (f x)
@@ -362,6 +363,7 @@ data ConfigFlags = ConfigFlags {
   }
   deriving (Generic, Read, Show)
 
+instance Serialise ConfigFlags
 instance Binary ConfigFlags
 
 -- | More convenient version of 'configPrograms'. Results in an
@@ -1389,6 +1391,7 @@ instance Semigroup DoctestFlags where
 data HaddockTarget = ForHackage | ForDevelopment deriving (Eq, Show, Generic)
 
 instance Binary HaddockTarget
+instance Serialise HaddockTarget
 
 instance Text HaddockTarget where
     disp ForHackage     = Disp.text "for-hackage"

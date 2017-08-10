@@ -9,6 +9,7 @@ module Distribution.Client.Dependency.Types (
 
 import Data.Char
          ( isAlpha, toLower )
+import Codec.Serialise (Serialise)
 
 import qualified Distribution.Compat.ReadP as Parse
          ( pfail, munch1 )
@@ -18,8 +19,6 @@ import Distribution.Text
 import Text.PrettyPrint
          ( text )
 import GHC.Generics (Generic)
-import Distribution.Compat.Binary (Binary(..))
-
 
 -- | All the solvers that can be selected.
 data PreSolver = AlwaysModular
@@ -29,8 +28,9 @@ data PreSolver = AlwaysModular
 data Solver = Modular
   deriving (Eq, Ord, Show, Bounded, Enum, Generic)
 
-instance Binary PreSolver
-instance Binary Solver
+instance Serialise PreSolver
+
+instance Serialise Solver
 
 instance Text PreSolver where
   disp AlwaysModular = text "modular"

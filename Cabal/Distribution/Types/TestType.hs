@@ -21,6 +21,8 @@ data TestType = TestTypeExe Version     -- ^ \"type: exitcode-stdio-x.y\"
               | TestTypeUnknown String Version -- ^ Some unknown test type e.g. \"type: foo\"
     deriving (Generic, Show, Read, Eq, Typeable, Data)
 
+instance Serialise TestType
+
 instance Binary TestType
 
 knownTestTypes :: [TestType]

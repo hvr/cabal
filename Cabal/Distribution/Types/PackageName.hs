@@ -46,6 +46,7 @@ instance IsString PackageName where
   fromString = mkPackageName
 
 instance Binary PackageName
+instance Serialise PackageName
 
 instance Text PackageName where
   disp = Disp.text . unPackageName

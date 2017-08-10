@@ -87,10 +87,14 @@ instance Bounded Verbosity where
     minBound = mkVerbosity minBound
     maxBound = mkVerbosity maxBound
 
+instance Serialise Verbosity
+
 instance Binary Verbosity
 
 data VerbosityLevel = Silent | Normal | Verbose | Deafening
     deriving (Generic, Show, Read, Eq, Ord, Enum, Bounded)
+
+instance Serialise VerbosityLevel
 
 instance Binary VerbosityLevel
 
@@ -200,6 +204,8 @@ data VerbosityFlag
     | VMarkOutput
     | VTimestamp
     deriving (Generic, Show, Read, Eq, Ord, Enum, Bounded)
+
+instance Serialise VerbosityFlag
 
 instance Binary VerbosityFlag
 

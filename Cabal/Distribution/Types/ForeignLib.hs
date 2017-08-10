@@ -80,6 +80,7 @@ instance Read LibVersionInfo where
         return (mkLibVersionInfo t)
 
 instance Binary LibVersionInfo
+instance Serialise LibVersionInfo
 
 instance Text LibVersionInfo where
     disp (LibVersionInfo c r a)
@@ -126,6 +127,7 @@ libVersionMajor :: LibVersionInfo -> Int
 libVersionMajor (LibVersionInfo c _ a) = c-a
 
 instance Binary ForeignLib
+instance Serialise ForeignLib
 
 instance Semigroup ForeignLib where
   a <> b = ForeignLib {

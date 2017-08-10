@@ -12,7 +12,7 @@ import Distribution.PackageDescription
 
 import Data.ByteString.Lazy (ByteString)
 import GHC.Generics (Generic)
-import Distribution.Compat.Binary (Binary(..))
+import Codec.Serialise (Serialise)
 import Data.Typeable
 
 -- | A package description along with the location of the package sources.
@@ -25,7 +25,7 @@ data SourcePackage loc = SourcePackage {
   }
   deriving (Eq, Show, Generic, Typeable)
 
-instance (Binary loc) => Binary (SourcePackage loc)
+instance (Serialise loc) => Serialise (SourcePackage loc)
 
 instance Package (SourcePackage a) where packageId = packageInfoId
 

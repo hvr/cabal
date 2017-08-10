@@ -100,8 +100,8 @@ import Data.Maybe
          ( fromMaybe, mapMaybe )
 import qualified Distribution.Compat.Graph as Graph
 import Distribution.Compat.Graph (Graph, IsNode(..))
-import Distribution.Compat.Binary (Binary(..))
 import GHC.Generics
+import Codec.Serialise (Serialise(..))
 import Data.Typeable
 import Control.Monad
 import Control.Exception
@@ -202,8 +202,8 @@ instance (IsNode ipkg, IsNode srcpkg, Key ipkg ~ UnitId, Key srcpkg ~ UnitId)
     nodeNeighbors (Configured  spkg) = nodeNeighbors spkg
     nodeNeighbors (Installed   spkg) = nodeNeighbors spkg
 
-instance (Binary ipkg, Binary srcpkg)
-      => Binary (GenericPlanPackage ipkg srcpkg)
+instance (Serialise ipkg, Serialise srcpkg)
+      => Serialise (GenericPlanPackage ipkg srcpkg)
 
 type PlanPackage = GenericPlanPackage
                    InstalledPackageInfo (ConfiguredPackage UnresolvedPkgLoc)
@@ -262,16 +262,16 @@ internalError loc msg = error $ "internal error in InstallPlan." ++ loc
                              ++ if null msg then "" else ": " ++ msg
 
 instance (IsNode ipkg, Key ipkg ~ UnitId, IsNode srcpkg, Key srcpkg ~ UnitId,
-          Binary ipkg, Binary srcpkg)
-       => Binary (GenericInstallPlan ipkg srcpkg) where
-    put GenericInstallPlan {
+          Serialise ipkg, Serialise srcpkg)
+       => Serialise (GenericInstallPlan ipkg srcpkg) where
+    encode GenericInstallPlan {
               planGraph      = graph,
               planIndepGoals = indepGoals
-        } = put (graph, indepGoals)
+        } = encode (graph, indepGoals)
 
-    get = do
-      (graph, indepGoals) <- get
-      return $! mkInstallPlan "(instance Binary)" graph indepGoals
+    decode = do
+      (graph, indepGoals) <- decode
+      return $! mkInstallPlan "(instance Serialise)" graph indepGoals
 
 showPlanGraph :: (Package ipkg, Package srcpkg,
                   IsUnit ipkg, IsUnit srcpkg)

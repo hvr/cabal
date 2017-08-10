@@ -29,6 +29,8 @@ data BuildType
                 --   you to inspect the rest of the package description.
                 deriving (Generic, Show, Read, Eq, Typeable, Data)
 
+instance Serialise BuildType
+
 instance Binary BuildType
 
 knownBuildTypes :: [BuildType]

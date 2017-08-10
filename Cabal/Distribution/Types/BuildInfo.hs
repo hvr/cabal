@@ -85,6 +85,8 @@ data BuildInfo = BuildInfo {
     }
     deriving (Generic, Show, Read, Eq, Typeable, Data)
 
+instance Serialise BuildInfo
+
 instance Binary BuildInfo
 
 instance Monoid BuildInfo where

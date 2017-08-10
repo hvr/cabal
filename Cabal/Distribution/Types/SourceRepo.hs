@@ -91,6 +91,8 @@ emptySourceRepo kind = SourceRepo
     , repoSubdir   = Nothing
     }
 
+instance Serialise SourceRepo
+
 instance Binary SourceRepo
 
 -- | What this repo info is for, what it represents.
@@ -109,6 +111,8 @@ data RepoKind =
   | RepoKindUnknown String
   deriving (Eq, Generic, Ord, Read, Show, Typeable, Data)
 
+instance Serialise RepoKind
+
 instance Binary RepoKind
 
 -- | An enumeration of common source control systems. The fields used in the
@@ -119,6 +123,8 @@ data RepoType = Darcs | Git | SVN | CVS
               | Mercurial | GnuArch | Bazaar | Monotone
               | OtherRepoType String
   deriving (Eq, Generic, Ord, Read, Show, Typeable, Data)
+
+instance Serialise RepoType
 
 instance Binary RepoType
 

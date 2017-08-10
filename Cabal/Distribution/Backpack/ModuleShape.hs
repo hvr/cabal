@@ -33,6 +33,7 @@ data ModuleShape = ModuleShape {
     deriving (Eq, Show, Generic)
 
 instance Binary ModuleShape
+instance Serialise ModuleShape
 
 instance ModSubst ModuleShape where
     modSubst subst (ModuleShape provs reqs)

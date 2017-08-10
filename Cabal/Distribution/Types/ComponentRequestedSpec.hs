@@ -66,6 +66,8 @@ data ComponentRequestedSpec
                              , benchmarksRequested :: Bool }
     | OneComponentRequestedSpec ComponentName
   deriving (Generic, Read, Show, Eq)
+instance Serialise ComponentRequestedSpec
+
 instance Binary ComponentRequestedSpec
 
 -- | The default set of enabled components.  Historically tests and

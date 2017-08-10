@@ -3,7 +3,7 @@ module Distribution.Solver.Types.SolverPackage
     ( SolverPackage(..)
     ) where
 
-import Distribution.Compat.Binary (Binary(..))
+import Codec.Serialise (Serialise)
 import Distribution.Package ( Package(..) )
 import Distribution.PackageDescription ( FlagAssignment )
 import Distribution.Solver.Types.ComponentDeps ( ComponentDeps )
@@ -28,7 +28,7 @@ data SolverPackage loc = SolverPackage {
     }
   deriving (Eq, Show, Generic)
 
-instance Binary loc => Binary (SolverPackage loc)
+instance Serialise loc => Serialise (SolverPackage loc)
 
 instance Package (SolverPackage loc) where
   packageId = packageId . solverPkgSource

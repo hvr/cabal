@@ -37,6 +37,7 @@ instance Text ForeignLibType where
     ]
 
 instance Binary ForeignLibType
+instance Serialise ForeignLibType
 
 instance Semigroup ForeignLibType where
   ForeignLibTypeUnknown <> b = b

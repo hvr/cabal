@@ -69,6 +69,8 @@ data ProgramSearchPathEntry =
        | ProgramSearchPathDefault       -- ^ The system default
   deriving (Eq, Generic)
 
+instance Serialise ProgramSearchPathEntry
+
 instance Binary ProgramSearchPathEntry
 
 defaultProgramSearchPath :: ProgramSearchPath

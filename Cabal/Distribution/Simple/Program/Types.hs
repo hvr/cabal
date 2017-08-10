@@ -127,6 +127,8 @@ data ConfiguredProgram = ConfiguredProgram {
      }
   deriving (Eq, Generic, Read, Show, Typeable)
 
+instance Serialise ConfiguredProgram
+
 instance Binary ConfiguredProgram
 
 -- | Where a program was found. Also tells us whether it's specified by user or
@@ -138,6 +140,8 @@ data ProgramLocation
     | FoundOnSystem { locationPath :: FilePath }
       -- ^The program was found automatically.
       deriving (Eq, Generic, Read, Show)
+
+instance Serialise ProgramLocation
 
 instance Binary ProgramLocation
 

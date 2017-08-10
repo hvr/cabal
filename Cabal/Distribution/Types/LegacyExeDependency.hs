@@ -30,6 +30,7 @@ data LegacyExeDependency = LegacyExeDependency
                          deriving (Generic, Read, Show, Eq, Typeable, Data)
 
 instance Binary LegacyExeDependency
+instance Serialise LegacyExeDependency
 instance NFData LegacyExeDependency where rnf = genericRnf
 
 instance Text LegacyExeDependency where

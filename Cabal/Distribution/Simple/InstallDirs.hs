@@ -97,6 +97,8 @@ data InstallDirs dir = InstallDirs {
         sysconfdir   :: dir
     } deriving (Eq, Read, Show, Functor, Generic)
 
+instance Serialise dir => Serialise (InstallDirs dir)
+
 instance Binary dir => Binary (InstallDirs dir)
 
 instance (Semigroup dir, Monoid dir) => Monoid (InstallDirs dir) where
@@ -343,12 +345,16 @@ prefixRelativeInstallDirs pkgId libname compilerId platform dirs =
 newtype PathTemplate = PathTemplate [PathComponent]
   deriving (Eq, Ord, Generic)
 
+instance Serialise PathTemplate
+
 instance Binary PathTemplate
 
 data PathComponent =
        Ordinary FilePath
      | Variable PathTemplateVariable
      deriving (Eq, Ord, Generic)
+
+instance Serialise PathComponent
 
 instance Binary PathComponent
 
@@ -377,6 +383,8 @@ data PathTemplateVariable =
                           -- @pass@, @fail@, or @error@.
      | BenchmarkNameVar   -- ^ The name of the benchmark being run
   deriving (Eq, Ord, Generic)
+
+instance Serialise PathTemplateVariable
 
 instance Binary PathTemplateVariable
 

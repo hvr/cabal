@@ -28,6 +28,7 @@ data ExeDependency = ExeDependency
                      deriving (Generic, Read, Show, Eq, Typeable, Data)
 
 instance Binary ExeDependency
+instance Serialise ExeDependency
 instance NFData ExeDependency where rnf = genericRnf
 
 instance Text ExeDependency where

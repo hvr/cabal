@@ -5,7 +5,7 @@ module Distribution.Solver.Types.SolverId
 
 where
 
-import Distribution.Compat.Binary (Binary(..))
+import Codec.Serialise (Serialise)
 import Distribution.Package (PackageId, Package(..), UnitId)
 import GHC.Generics (Generic)
 
@@ -18,7 +18,7 @@ data SolverId = PreExistingId { solverSrcId :: PackageId, solverInstId :: UnitId
               | PlannedId     { solverSrcId :: PackageId }
   deriving (Eq, Ord, Generic)
 
-instance Binary SolverId
+instance Serialise SolverId
 
 instance Show SolverId where
     show = show . solverSrcId

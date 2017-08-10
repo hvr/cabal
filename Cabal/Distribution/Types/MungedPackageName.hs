@@ -52,6 +52,7 @@ instance IsString MungedPackageName where
   fromString = mkMungedPackageName
 
 instance Binary MungedPackageName
+instance Serialise MungedPackageName
 
 instance Text MungedPackageName where
   disp = Disp.text . unMungedPackageName

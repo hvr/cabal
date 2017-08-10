@@ -60,7 +60,7 @@ data Component =
   | ComponentSetup
   deriving (Show, Eq, Ord, Generic)
 
-instance Binary Component
+instance Serialise Component
 
 -- | Dependency for a single component.
 type ComponentDep a = (Component, a)
@@ -87,7 +87,7 @@ instance Foldable ComponentDeps where
 instance Traversable ComponentDeps where
   traverse f = fmap ComponentDeps . traverse f . unComponentDeps
 
-instance Binary a => Binary (ComponentDeps a)
+instance Serialise a => Serialise (ComponentDeps a)
 
 componentNameToComponent :: CN.ComponentName -> Component
 componentNameToComponent (CN.CLibName)      = ComponentLib

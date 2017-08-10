@@ -137,6 +137,16 @@ instance Read ProgramDb where
 -- | Note that this instance does not preserve the known 'Program's.
 -- See 'restoreProgramDb' for details.
 --
+instance Serialise ProgramDb where
+  encode db = encode (progSearchPath db,configuredProgs db)
+
+  decode = do
+    (searchpath,progs) <- decode
+    return $! emptyProgramDb {
+      progSearchPath  = searchpath,
+      configuredProgs = progs
+    }
+
 instance Binary ProgramDb where
   put db = do
     put (progSearchPath db)

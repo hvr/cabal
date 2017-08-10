@@ -97,6 +97,7 @@ instance MonadPlus Condition where
   mplus = mappend
 
 instance Binary c => Binary (Condition c)
+instance Serialise c => Serialise (Condition c)
 
 -- | Simplify the condition and return its free variables.
 simplifyCondition :: Condition c

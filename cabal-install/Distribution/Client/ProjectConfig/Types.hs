@@ -59,11 +59,11 @@ import Distribution.Verbosity
 import Data.Map (Map)
 import qualified Data.Map as Map
 import Data.Set (Set)
-import Distribution.Compat.Binary (Binary)
 import Distribution.Compat.Semigroup
 import GHC.Generics (Generic)
 import Data.Typeable
 
+import Codec.Serialise (Serialise(..))
 
 -------------------------------
 -- Project config types
@@ -269,17 +269,16 @@ data PackageConfig
      }
   deriving (Eq, Show, Generic)
 
-instance Binary ProjectConfig
-instance Binary ProjectConfigBuildOnly
-instance Binary ProjectConfigShared
-instance Binary ProjectConfigProvenance
-instance Binary PackageConfig
-
+instance Serialise ProjectConfig
+instance Serialise ProjectConfigBuildOnly
+instance Serialise ProjectConfigShared
+instance Serialise ProjectConfigProvenance
+instance Serialise PackageConfig
 
 -- | Newtype wrapper for 'Map' that provides a 'Monoid' instance that takes
 -- the last value rather than the first value for overlapping keys.
 newtype MapLast k v = MapLast { getMapLast :: Map k v }
-  deriving (Eq, Show, Functor, Generic, Binary, Typeable)
+  deriving (Eq, Show, Functor, Generic, Serialise, Typeable)
 
 instance Ord k => Monoid (MapLast k v) where
   mempty  = MapLast Map.empty
@@ -293,7 +292,7 @@ instance Ord k => Semigroup (MapLast k v) where
 -- | Newtype wrapper for 'Map' that provides a 'Monoid' instance that
 -- 'mappend's values of overlapping keys rather than taking the first.
 newtype MapMappend k v = MapMappend { getMapMappend :: Map k v }
-  deriving (Eq, Show, Functor, Generic, Binary, Typeable)
+  deriving (Eq, Show, Functor, Generic, Serialise, Typeable)
 
 instance (Semigroup v, Ord k) => Monoid (MapMappend k v) where
   mempty  = MapMappend Map.empty
@@ -376,7 +375,7 @@ data SolverSettings
      }
   deriving (Eq, Show, Generic, Typeable)
 
-instance Binary SolverSettings
+instance Serialise SolverSettings
 
 
 -- | Resolved configuration for things that affect how we build and not the

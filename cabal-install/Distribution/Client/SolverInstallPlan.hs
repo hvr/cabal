@@ -71,7 +71,8 @@ import Data.List
          ( intercalate )
 import Data.Maybe
          ( fromMaybe, mapMaybe )
-import Distribution.Compat.Binary (Binary(..))
+import Codec.Serialise (Serialise)
+import GHC.Generics (Generic)
 import Distribution.Compat.Graph (Graph, IsNode(..))
 import qualified Data.Graph as OldGraph
 import qualified Distribution.Compat.Graph as Graph
@@ -88,7 +89,7 @@ data SolverInstallPlan = SolverInstallPlan {
     planIndex      :: !SolverPlanIndex,
     planIndepGoals :: !IndependentGoals
   }
-  deriving (Typeable)
+  deriving (Typeable,Generic)
 
 {-
 -- | Much like 'planPkgIdOf', but mapping back to full packages.
@@ -111,15 +112,7 @@ mkInstallPlan index indepGoals =
       planIndepGoals = indepGoals
     }
 
-instance Binary SolverInstallPlan where
-    put SolverInstallPlan {
-              planIndex      = index,
-              planIndepGoals = indepGoals
-        } = put (index, indepGoals)
-
-    get = do
-      (index, indepGoals) <- get
-      return $! mkInstallPlan index indepGoals
+instance Serialise SolverInstallPlan
 
 showPlanIndex :: [SolverPlanPackage] -> String
 showPlanIndex = intercalate "\n" . map showPlanPackage

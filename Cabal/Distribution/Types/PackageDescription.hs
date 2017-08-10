@@ -146,6 +146,7 @@ data PackageDescription
     deriving (Generic, Show, Read, Eq, Typeable, Data)
 
 instance Binary PackageDescription
+instance Serialise PackageDescription
 
 instance Package PackageDescription where
   packageId = package

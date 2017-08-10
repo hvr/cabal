@@ -147,6 +147,8 @@ data PackageIndex a = PackageIndex {
 
   } deriving (Eq, Generic, Show, Read)
 
+instance Serialise a => Serialise (PackageIndex a)
+
 instance Binary a => Binary (PackageIndex a)
 
 -- | The default package index which contains 'InstalledPackageInfo'.  Normally

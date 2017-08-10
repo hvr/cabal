@@ -30,6 +30,7 @@ data IncludeRenaming
     deriving (Show, Read, Eq, Ord, Typeable, Data, Generic)
 
 instance Binary IncludeRenaming
+instance Serialise IncludeRenaming
 
 -- | The 'defaultIncludeRenaming' applied when you only @build-depends@
 -- on a package.

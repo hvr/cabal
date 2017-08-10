@@ -39,6 +39,8 @@ import System.FilePath ( pathSeparator )
 newtype ModuleName = ModuleName ShortTextLst
   deriving (Eq, Generic, Ord, Read, Show, Typeable, Data)
 
+instance Serialise ModuleName
+
 instance Binary ModuleName
 
 instance NFData ModuleName where
@@ -135,6 +137,10 @@ instance Read ShortTextLst where
 instance Binary ShortTextLst where
     put = put . stlToList
     get = stlFromList <$> get
+
+instance Serialise ShortTextLst where
+    encode = encode . stlToList
+    decode = stlFromList <$> decode
 
 stlToList :: ShortTextLst -> [ShortText]
 stlToList STLNil = []

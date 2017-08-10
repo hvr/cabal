@@ -30,6 +30,7 @@ data PackageIdentifier
      deriving (Generic, Read, Show, Eq, Ord, Typeable, Data)
 
 instance Binary PackageIdentifier
+instance Serialise PackageIdentifier
 
 instance Text PackageIdentifier where
   disp (PackageIdentifier n v)

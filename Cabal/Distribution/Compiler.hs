@@ -61,6 +61,8 @@ data CompilerFlavor =
   | OtherCompiler String
   deriving (Generic, Show, Read, Eq, Ord, Typeable, Data)
 
+instance Serialise CompilerFlavor
+
 instance Binary CompilerFlavor
 
 knownCompilerFlavors :: [CompilerFlavor]
@@ -136,6 +138,8 @@ defaultCompilerFlavor = case buildCompilerFlavor of
 data CompilerId = CompilerId CompilerFlavor Version
   deriving (Eq, Generic, Ord, Read, Show)
 
+instance Serialise CompilerId
+
 instance Binary CompilerId
 
 instance Text CompilerId where
@@ -175,12 +179,16 @@ data CompilerInfo = CompilerInfo {
      }
      deriving (Generic, Show, Read)
 
+instance Serialise CompilerInfo
+
 instance Binary CompilerInfo
 
 data AbiTag
   = NoAbiTag
   | AbiTag String
   deriving (Eq, Generic, Show, Read)
+
+instance Serialise AbiTag
 
 instance Binary AbiTag
 

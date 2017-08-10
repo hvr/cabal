@@ -28,6 +28,8 @@ data TestSuite = TestSuite {
     }
     deriving (Generic, Show, Read, Eq, Typeable, Data)
 
+instance Serialise TestSuite
+
 instance Binary TestSuite
 
 instance Monoid TestSuite where

@@ -59,7 +59,7 @@ import System.Posix.Files ( modificationTime )
 -- | An opaque type representing a file's modification time, represented
 -- internally as a 64-bit unsigned integer in the Windows UTC format.
 newtype ModTime = ModTime Word64
-                deriving (Binary, Bounded, Eq, Ord)
+                deriving (Binary, Serialise, Bounded, Eq, Ord)
 
 instance Show ModTime where
   show (ModTime x) = show x

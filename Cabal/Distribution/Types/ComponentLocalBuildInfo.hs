@@ -110,6 +110,8 @@ data ComponentLocalBuildInfo
   }
   deriving (Generic, Read, Show)
 
+instance Serialise ComponentLocalBuildInfo
+
 instance Binary ComponentLocalBuildInfo
 
 instance IsNode ComponentLocalBuildInfo where

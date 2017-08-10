@@ -22,6 +22,8 @@ data BenchmarkType = BenchmarkTypeExe Version
                      -- ^ Some unknown benchmark type e.g. \"type: foo\"
     deriving (Generic, Show, Read, Eq, Typeable, Data)
 
+instance Serialise BenchmarkType
+
 instance Binary BenchmarkType
 
 knownBenchmarkTypes :: [BenchmarkType]

@@ -58,6 +58,8 @@ data GenericPackageDescription =
 instance Package GenericPackageDescription where
   packageId = packageId . packageDescription
 
+instance Serialise GenericPackageDescription
+
 instance Binary GenericPackageDescription
 
 -- | A flag can represent a feature to be included, or a way of linking
@@ -71,6 +73,7 @@ data Flag = MkFlag
     deriving (Show, Eq, Typeable, Data, Generic)
 
 instance Binary Flag
+instance Serialise Flag
 
 -- | A 'Flag' initialized with default parameters.
 emptyFlag :: FlagName -> Flag
@@ -115,6 +118,7 @@ unFlagName :: FlagName -> String
 unFlagName (FlagName s) = fromShortText s
 
 instance Binary FlagName
+instance Serialise FlagName
 
 -- | A 'FlagAssignment' is a total or partial mapping of 'FlagName's to
 -- 'Bool' flag values. It represents the flags chosen by the user or
@@ -160,3 +164,4 @@ data ConfVar = OS OS
     deriving (Eq, Show, Typeable, Data, Generic)
 
 instance Binary ConfVar
+instance Serialise ConfVar

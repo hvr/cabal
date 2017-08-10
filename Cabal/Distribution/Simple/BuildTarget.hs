@@ -131,6 +131,8 @@ data BuildTarget =
    | BuildTargetFile ComponentName FilePath
   deriving (Eq, Show, Generic)
 
+instance Serialise BuildTarget
+
 instance Binary BuildTarget
 
 buildTargetComponentName :: BuildTarget -> ComponentName

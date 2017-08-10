@@ -38,6 +38,8 @@ data TestSuiteInterface =
    | TestSuiteUnsupported TestType
    deriving (Eq, Generic, Read, Show, Typeable, Data)
 
+instance Serialise TestSuiteInterface
+
 instance Binary TestSuiteInterface
 
 

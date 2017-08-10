@@ -51,6 +51,7 @@ instance IsString UnqualComponentName where
   fromString = mkUnqualComponentName
 
 instance Binary UnqualComponentName
+instance Serialise UnqualComponentName
 
 instance Text UnqualComponentName where
   disp = text . unUnqualComponentName

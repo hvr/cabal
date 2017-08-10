@@ -25,6 +25,7 @@ data Executable = Executable {
     deriving (Generic, Show, Read, Eq, Typeable, Data)
 
 instance Binary Executable
+instance Serialise Executable
 
 instance Monoid Executable where
   mempty = gmempty

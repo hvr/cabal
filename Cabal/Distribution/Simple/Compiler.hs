@@ -101,6 +101,8 @@ data Compiler = Compiler {
     }
     deriving (Eq, Generic, Typeable, Show, Read)
 
+instance Serialise Compiler
+
 instance Binary Compiler
 
 showCompilerId :: Compiler -> String
@@ -172,6 +174,8 @@ data PackageDB = GlobalPackageDB
                | SpecificPackageDB FilePath
     deriving (Eq, Generic, Ord, Show, Read)
 
+instance Serialise PackageDB
+
 instance Binary PackageDB
 
 -- | We typically get packages from several databases, and stack them
@@ -224,6 +228,8 @@ data OptimisationLevel = NoOptimisation
                        | MaximumOptimisation
     deriving (Bounded, Enum, Eq, Generic, Read, Show)
 
+instance Serialise OptimisationLevel
+
 instance Binary OptimisationLevel
 
 flagToOptimisationLevel :: Maybe String -> OptimisationLevel
@@ -250,6 +256,8 @@ data DebugInfoLevel = NoDebugInfo
                     | NormalDebugInfo
                     | MaximalDebugInfo
     deriving (Bounded, Enum, Eq, Generic, Read, Show)
+
+instance Serialise DebugInfoLevel
 
 instance Binary DebugInfoLevel
 
@@ -392,6 +400,8 @@ data ProfDetailLevel = ProfDetailNone
                      | ProfDetailAllFunctions
                      | ProfDetailOther String
     deriving (Eq, Generic, Read, Show)
+
+instance Serialise ProfDetailLevel
 
 instance Binary ProfDetailLevel
 

@@ -18,6 +18,7 @@ module Distribution.Compat.Semigroup
     ) where
 
 import Distribution.Compat.Binary (Binary)
+import Codec.Serialise (Serialise)
 
 import Control.Applicative as App
 import GHC.Generics
@@ -108,7 +109,7 @@ instance Ord k => Semigroup (Map k v) where
 --
 -- NB: 'Data.Semigroup.Last' is defined differently and not a 'Monoid'
 newtype Last' a = Last' { getLast' :: Maybe a }
-                deriving (Eq, Ord, Read, Show, Binary,
+                deriving (Eq, Ord, Read, Show, Binary, Serialise,
                           Functor, App.Applicative, Generic)
 
 instance Semigroup (Last' a) where

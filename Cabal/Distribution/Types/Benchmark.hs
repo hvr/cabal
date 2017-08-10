@@ -28,6 +28,8 @@ data Benchmark = Benchmark {
     }
     deriving (Generic, Show, Read, Eq, Typeable, Data)
 
+instance Serialise Benchmark
+
 instance Binary Benchmark
 
 instance Monoid Benchmark where

@@ -45,7 +45,7 @@ import qualified Data.Map.Strict as Map
 import qualified Data.Map        as Map
 #endif
 import qualified Data.ByteString.Lazy as BS
-import qualified Distribution.Compat.Binary as Binary
+import Codec.Serialise (deserialiseOrFail,serialise)
 import qualified Data.Hashable as Hashable
 
 import           Control.Monad
@@ -99,9 +99,9 @@ data MonitorKindDir  = DirExists
                      | DirNotExists
   deriving (Eq, Show, Generic)
 
-instance Binary MonitorFilePath
-instance Binary MonitorKindFile
-instance Binary MonitorKindDir
+instance Serialise MonitorFilePath
+instance Serialise MonitorKindFile
+instance Serialise MonitorKindDir
 
 -- | Monitor a single file for changes, based on its modification time.
 -- The monitored file is considered to have changed if it no longer
@@ -206,7 +206,7 @@ data MonitorStateFileSet
      -- there is also no particular gain either. That said, we do preserve the
      -- order of the lists just to reduce confusion (and have predictable I/O
      -- patterns).
-  deriving Show
+  deriving (Show,Generic)
 
 type Hash = Int
 
@@ -234,8 +234,8 @@ data MonitorStateFileStatus
    | MonitorStateAlreadyChanged
   deriving (Show, Generic)
 
-instance Binary MonitorStateFile
-instance Binary MonitorStateFileStatus
+instance Serialise MonitorStateFile
+instance Serialise MonitorStateFileStatus
 
 -- | The state necessary to determine whether the files matched by a globbing
 -- match have changed.
@@ -258,8 +258,8 @@ data MonitorStateGlobRel
    | MonitorStateGlobDirTrailing
   deriving (Show, Generic)
 
-instance Binary MonitorStateGlob
-instance Binary MonitorStateGlobRel
+instance Serialise MonitorStateGlob
+instance Serialise MonitorStateGlobRel
 
 -- | We can build a 'MonitorStateFileSet' from a set of 'MonitorFilePath' by
 -- inspecting the state of the file system, and we can go in the reverse
@@ -403,7 +403,7 @@ data MonitorChangedReason a =
 -- See 'FileMonitor' for a full explanation.
 --
 checkFileMonitorChanged
-  :: (Binary a, Binary b)
+  :: (Serialise a, Serialise b)
   => FileMonitor a b            -- ^ cache file path
   -> FilePath                   -- ^ root directory
   -> a                          -- ^ guard or key value
@@ -481,23 +481,26 @@ checkFileMonitorChanged
 --
 -- This determines the type and format of the binary cache file.
 --
-readCacheFile :: (Binary a, Binary b)
+readCacheFile :: (Serialise a, Serialise b)
               => FileMonitor a b
               -> IO (Either String (MonitorStateFileSet, a, b))
 readCacheFile FileMonitor {fileMonitorCacheFile} =
-    withBinaryFile fileMonitorCacheFile ReadMode $ \hnd ->
-      Binary.decodeOrFailIO =<< BS.hGetContents hnd
+    withBinaryFile fileMonitorCacheFile ReadMode $ \hnd -> do
+      content <- BS.hGetContents hnd
+      case deserialiseOrFail content of
+        Left ex -> pure (Left (show ex))
+        Right dat -> pure (Right dat)
 
 -- | Helper for writing the cache file.
 --
 -- This determines the type and format of the binary cache file.
 --
-rewriteCacheFile :: (Binary a, Binary b)
+rewriteCacheFile :: (Serialise a, Serialise b)
                  => FileMonitor a b
                  -> MonitorStateFileSet -> a -> b -> IO ()
 rewriteCacheFile FileMonitor {fileMonitorCacheFile} fileset key result =
     writeFileAtomic fileMonitorCacheFile $
-      Binary.encode (fileset, key, result)
+      serialise (fileset, key, result)
 
 -- | Probe the file system to see if any of the monitored files have changed.
 --
@@ -758,7 +761,7 @@ probeMonitorStateGlobRel _ _ _ _ MonitorStateGlobDirTrailing =
 -- any files then you can use @Nothing@ for the timestamp parameter.
 --
 updateFileMonitor
-  :: (Binary a, Binary b)
+  :: (Serialise a, Serialise b)
   => FileMonitor a b          -- ^ cache file path
   -> FilePath                 -- ^ root directory
   -> Maybe MonitorTimestamp   -- ^ timestamp when the update action started
@@ -965,7 +968,7 @@ getFileHash hashcache relfile absfile mtime =
 -- that the set of files to monitor can change then it's simpler just to throw
 -- away the structure and use a finite map.
 --
-readCacheFileHashes :: (Binary a, Binary b)
+readCacheFileHashes :: (Serialise a, Serialise b)
                     => FileMonitor a b -> IO FileHashCache
 readCacheFileHashes monitor =
     handleDoesNotExist Map.empty $
@@ -1109,15 +1112,4 @@ handleIOException e =
 -- Instances
 --
 
-instance Binary MonitorStateFileSet where
-  put (MonitorStateFileSet singlePaths globPaths) = do
-    put (1 :: Int) -- version
-    put singlePaths
-    put globPaths
-  get = do
-    ver <- get
-    if ver == (1 :: Int)
-      then do singlePaths <- get
-              globPaths   <- get
-              return $! MonitorStateFileSet singlePaths globPaths
-      else fail "MonitorStateFileSet: wrong version"
+instance Serialise MonitorStateFileSet

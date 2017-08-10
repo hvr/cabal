@@ -25,6 +25,8 @@ data ModuleReexport = ModuleReexport {
     }
     deriving (Eq, Generic, Read, Show, Typeable, Data)
 
+instance Serialise ModuleReexport
+
 instance Binary ModuleReexport
 
 instance Text ModuleReexport where

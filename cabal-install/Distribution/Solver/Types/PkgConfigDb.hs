@@ -55,7 +55,7 @@ data PkgConfigDb =  PkgConfigDb (M.Map PkgconfigName (Maybe Version))
                  -- ^ For when we could not run pkg-config successfully.
      deriving (Show, Generic, Typeable)
 
-instance Binary PkgConfigDb
+instance Serialise PkgConfigDb
 
 -- | Query pkg-config for the list of installed packages, together
 -- with their versions. Return a `PkgConfigDb` encapsulating this

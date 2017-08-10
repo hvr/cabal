@@ -56,6 +56,7 @@ data CondTree v c a = CondNode
     deriving (Show, Eq, Typeable, Data, Generic, Functor, Foldable, Traversable)
 
 instance (Binary v, Binary c, Binary a) => Binary (CondTree v c a)
+instance (Serialise v, Serialise c, Serialise a) => Serialise (CondTree v c a)
 
 -- | A 'CondBranch' represents a conditional branch, e.g., @if
 -- flag(foo)@ on some syntax @a@.  It also has an optional false
@@ -76,6 +77,7 @@ instance Foldable (CondBranch v c) where
     foldMap f (CondBranch _ c (Just a)) = foldMap f c `mappend` foldMap f a
 
 instance (Binary v, Binary c, Binary a) => Binary (CondBranch v c a)
+instance (Serialise v, Serialise c, Serialise a) => Serialise (CondBranch v c a)
 
 condIfThen :: Condition v -> CondTree v c a -> CondBranch v c a
 condIfThen c t = CondBranch c t Nothing

@@ -8,9 +8,9 @@ module Distribution.Solver.Types.OptionalStanza
 
 import GHC.Generics (Generic)
 import Data.Typeable
-import Distribution.Compat.Binary (Binary(..))
 import Distribution.Types.ComponentRequestedSpec
             (ComponentRequestedSpec(..), defaultComponentRequestedSpec)
+import Codec.Serialise (Serialise)
 import Data.List (foldl')
 
 data OptionalStanza
@@ -31,4 +31,4 @@ enableStanzas = foldl' addStanza defaultComponentRequestedSpec
     addStanza enabled TestStanzas  = enabled { testsRequested = True }
     addStanza enabled BenchStanzas = enabled { benchmarksRequested = True }
 
-instance Binary OptionalStanza
+instance Serialise OptionalStanza

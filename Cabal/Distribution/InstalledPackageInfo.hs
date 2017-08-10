@@ -159,6 +159,7 @@ installedPackageId :: InstalledPackageInfo -> UnitId
 installedPackageId = installedUnitId
 
 instance Binary InstalledPackageInfo
+instance Serialise InstalledPackageInfo
 
 instance Package.HasMungedPackageId InstalledPackageInfo where
    mungedId = mungedPackageId
@@ -248,6 +249,9 @@ instance Text ExposedModule where
             fmap Just parse
         return (ExposedModule m reexport)
 
+
+instance Serialise ExposedModule
+
 instance Binary ExposedModule
 
 -- To maintain backwards-compatibility, we accept both comma/non-comma
@@ -301,6 +305,7 @@ instance Text AbiDependency where
         return (AbiDependency uid abi)
 
 instance Binary AbiDependency
+instance Serialise AbiDependency
 
 -- -----------------------------------------------------------------------------
 -- Munging

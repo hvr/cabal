@@ -33,6 +33,8 @@ data BenchmarkInterface =
    | BenchmarkUnsupported BenchmarkType
    deriving (Eq, Generic, Read, Show, Typeable, Data)
 
+instance Serialise BenchmarkInterface
+
 instance Binary BenchmarkInterface
 
 instance Monoid BenchmarkInterface where

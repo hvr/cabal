@@ -96,6 +96,8 @@ data OS = Linux | Windows | OSX        -- tier 1 desktop OSs
         | OtherOS String
   deriving (Eq, Generic, Ord, Show, Read, Typeable, Data)
 
+instance Serialise OS
+
 instance Binary OS
 
 knownOSs :: [OS]
@@ -159,6 +161,8 @@ data Arch = I386  | X86_64 | PPC | PPC64 | Sparc
           | OtherArch String
   deriving (Eq, Generic, Ord, Show, Read, Typeable, Data)
 
+instance Serialise Arch
+
 instance Binary Arch
 
 knownArches :: [Arch]
@@ -202,6 +206,8 @@ buildArch = classifyArch Permissive System.Info.arch
 
 data Platform = Platform Arch OS
   deriving (Eq, Generic, Ord, Show, Read, Typeable, Data)
+
+instance Serialise Platform
 
 instance Binary Platform
 

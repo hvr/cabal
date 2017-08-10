@@ -31,7 +31,7 @@ import           Data.Time                  (UTCTime (..), fromGregorianValid,
                                              timeOfDayToTime, timeToTimeOfDay)
 import           Data.Time.Clock.POSIX      (posixSecondsToUTCTime,
                                              utcTimeToPOSIXSeconds)
-import           Distribution.Compat.Binary
+import           Codec.Serialise
 import qualified Distribution.Compat.ReadP  as ReadP
 import           Distribution.Text
 import qualified Text.PrettyPrint           as Disp
@@ -98,9 +98,9 @@ showTimestamp ts = case timestampToUTCTime ts of
   where
     showTOD = show . timeToTimeOfDay
 
-instance Binary Timestamp where
-    put (TS t) = put t
-    get = TS `fmap` get
+instance Serialise Timestamp where
+    encode (TS t) = encode t
+    decode = TS `fmap` decode
 
 instance Text Timestamp where
     disp = Disp.text . showTimestamp
@@ -176,7 +176,7 @@ data IndexState = IndexStateHead -- ^ Use all available entries
                                             -- the specified time
                 deriving (Eq,Generic,Show)
 
-instance Binary IndexState
+instance Serialise IndexState
 instance NFData IndexState
 
 instance Text IndexState where

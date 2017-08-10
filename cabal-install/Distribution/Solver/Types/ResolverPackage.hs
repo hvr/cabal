@@ -11,11 +11,12 @@ import Distribution.Solver.Types.SolverId
 import Distribution.Solver.Types.SolverPackage
 import qualified Distribution.Solver.Types.ComponentDeps as CD
 
-import Distribution.Compat.Binary (Binary(..))
 import Distribution.Compat.Graph (IsNode(..))
 import Distribution.Package (Package(..), HasUnitId(..))
 import Distribution.Simple.Utils (ordNub)
 import GHC.Generics (Generic)
+
+import Codec.Serialise (Serialise)
 
 -- | The dependency resolver picks either pre-existing installed packages
 -- or it picks source packages along with package configuration.
@@ -26,7 +27,7 @@ data ResolverPackage loc = PreExisting InstSolverPackage
                          | Configured  (SolverPackage loc)
   deriving (Eq, Show, Generic)
 
-instance Binary loc => Binary (ResolverPackage loc)
+instance Serialise loc => Serialise (ResolverPackage loc)
 
 instance Package (ResolverPackage loc) where
   packageId (PreExisting ipkg)     = packageId ipkg

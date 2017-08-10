@@ -49,6 +49,7 @@ instance IsString AbiHash where
     fromString = mkAbiHash
 
 instance Binary AbiHash
+instance Serialise AbiHash
 
 instance Text AbiHash where
     disp = Disp.text . unAbiHash

@@ -109,3 +109,16 @@ instance Monoid ShortText where
 
 instance IsString ShortText where
     fromString = toShortText
+
+
+
+instance Serialise ShortText where
+    encode = encode . BS.Short.fromShort . unST
+    decode = fmap (ST . BS.Short.toShort) decode
+
+    
+{- FIXME
+
+    encode = encode . fromShortText
+    decode = fmap toShortText decode
+-}

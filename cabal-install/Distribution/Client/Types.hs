@@ -77,7 +77,7 @@ data SourcePackageDb = SourcePackageDb {
 }
   deriving (Eq, Generic)
 
-instance Binary SourcePackageDb
+instance Serialise SourcePackageDb
 
 -- ------------------------------------------------------------
 -- * Various kinds of information about packages
@@ -138,8 +138,7 @@ instance IsNode (ConfiguredPackage loc) where
     -- NB: have to deduplicate, otherwise the planner gets confused
     nodeNeighbors = ordNub . CD.flatDeps . depends
 
-instance (Binary loc) => Binary (ConfiguredPackage loc)
-
+instance (Serialise loc) => Serialise (ConfiguredPackage loc)
 
 -- | A ConfiguredId is a package ID for a configured package.
 --
@@ -163,7 +162,7 @@ annotatedIdToConfiguredId aid = ConfiguredId {
         confInstId   = ann_id aid
     }
 
-instance Binary ConfiguredId
+instance Serialise ConfiguredId
 
 instance Show ConfiguredId where
   show cid = show (confInstId cid)
@@ -241,18 +240,26 @@ data PackageLocation local =
 --  | ScmPackage
   deriving (Show, Functor, Eq, Ord, Generic, Typeable)
 
-instance Binary local => Binary (PackageLocation local)
+instance Serialise local => Serialise (PackageLocation local)
 
 -- note, network-uri-2.6.0.3+ provide a Generic instance but earlier
 -- versions do not, so we use manual Binary instances here
-instance Binary URI where
-  put (URI a b c d e) = do put a; put b; put c; put d; put e
-  get = do !a <- get; !b <- get; !c <- get; !d <- get; !e <- get
-           return (URI a b c d e)
+instance Serialise URI where
 
-instance Binary URIAuth where
-  put (URIAuth a b c) = do put a; put b; put c
-  get = do !a <- get; !b <- get; !c <- get; return (URIAuth a b c)
+-- instance Serialise URI where
+--   put (URI a b c d e) = do put a; put b; put c; put d; put e
+--   get = do !a <- get; !b <- get; !c <- get; !d <- get; !e <- get
+--            return (URI a b c d e)
+
+instance Serialise URIAuth where
+    encode (URIAuth a b c) = do encode (a,b,c)
+    decode = do
+        (!a,!b,!c) <- decode
+        pure (URIAuth a b c)
+
+-- instance Serialise URIAuth where
+--   put (URIAuth a b c) = do put a; put b; put c
+--   get = do !a <- get; !b <- get; !c <- get; return (URIAuth a b c)
 
 data RemoteRepo =
     RemoteRepo {
@@ -284,7 +291,7 @@ data RemoteRepo =
 
   deriving (Show, Eq, Ord, Generic)
 
-instance Binary RemoteRepo
+instance Serialise RemoteRepo
 
 -- | Construct a partial 'RemoteRepo' value to fold the field parser list over.
 emptyRemoteRepo :: String -> RemoteRepo
@@ -319,7 +326,7 @@ data Repo =
       }
   deriving (Show, Eq, Ord, Generic)
 
-instance Binary Repo
+instance Serialise Repo
 
 -- | Check if this is a remote repo
 maybeRepoRemote :: Repo -> Maybe RemoteRepo
@@ -364,15 +371,15 @@ data DocsResult  = DocsNotTried  | DocsFailed  | DocsOk
 data TestsResult = TestsNotTried | TestsOk
   deriving (Show, Generic, Typeable)
 
-instance Binary BuildFailure
-instance Binary BuildResult
-instance Binary DocsResult
-instance Binary TestsResult
+instance Serialise BuildFailure
+instance Serialise BuildResult
+instance Serialise DocsResult
+instance Serialise TestsResult
 
 --FIXME: this is a total cheat
-instance Binary SomeException where
-  put _ = return ()
-  get = fail "cannot serialise exceptions"
+instance Serialise SomeException where
+  encode = fail "cannot serialise exceptions"
+  decode = fail "cannot serialise exceptions"
 
 
 -- ------------------------------------------------------------
@@ -492,13 +499,13 @@ instance Text RelaxDeps where
                                                Parse.string "*")  <* Parse.eof))
           Parse.<++ (      RelaxDepsSome <$> parseOptCommaList parse)
 
-instance Binary RelaxDeps
-instance Binary RelaxDepMod
-instance Binary RelaxDepScope
-instance Binary RelaxDepSubject
-instance Binary RelaxedDep
-instance Binary AllowNewer
-instance Binary AllowOlder
+instance Serialise RelaxDeps
+instance Serialise RelaxDepMod
+instance Serialise RelaxDepScope
+instance Serialise RelaxDepSubject
+instance Serialise RelaxedDep
+instance Serialise AllowNewer
+instance Serialise AllowOlder
 
 -- | Return 'True' if 'RelaxDeps' specifies a non-empty set of relaxations
 --

@@ -55,6 +55,7 @@ instance IsString ComponentId where
     fromString = mkComponentId
 
 instance Binary ComponentId
+instance Serialise ComponentId
 
 instance Text ComponentId where
   disp = text . unComponentId

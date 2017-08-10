@@ -197,7 +197,7 @@ data PackageSpecifier pkg =
    | SpecificSourcePackage pkg
   deriving (Eq, Show, Generic)
 
-instance Binary pkg => Binary (PackageSpecifier pkg)
+instance Serialise pkg => Serialise (PackageSpecifier pkg)
 
 pkgSpecifierTarget :: Package pkg => PackageSpecifier pkg -> PackageName
 pkgSpecifierTarget (NamedPackage name _)       = name
@@ -711,7 +711,7 @@ data UserQualifier =
   | UserQualExe PackageName PackageName
   deriving (Eq, Show, Generic)
 
-instance Binary UserQualifier
+instance Serialise UserQualifier
 
 -- | Version of 'ConstraintScope' that a user may specify on the
 -- command line.
@@ -726,7 +726,7 @@ data UserConstraintScope =
   | UserAnyQualifier PackageName
   deriving (Eq, Show, Generic)
 
-instance Binary UserConstraintScope
+instance Serialise UserConstraintScope
 
 fromUserQualifier :: UserQualifier -> Qualifier
 fromUserQualifier UserQualToplevel = QualToplevel
@@ -745,7 +745,7 @@ data UserConstraint =
     UserConstraint UserConstraintScope PackageProperty
   deriving (Eq, Show, Generic)
            
-instance Binary UserConstraint
+instance Serialise UserConstraint
 
 userConstraintPackageName :: UserConstraint -> PackageName
 userConstraintPackageName (UserConstraint scope _) = scopePN scope

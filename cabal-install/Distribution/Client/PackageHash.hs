@@ -63,7 +63,7 @@ import Data.Maybe        (catMaybes)
 import Data.List         (sortBy, intercalate)
 import Data.Map          (Map)
 import Data.Function     (on)
-import Distribution.Compat.Binary (Binary(..))
+import Codec.Serialise   (Serialise(..))
 import Control.Exception (evaluate)
 import System.IO         (withBinaryFile, IOMode(..))
 
@@ -281,10 +281,10 @@ renderPackageHashInputs PackageHashInputs{
 newtype HashValue = HashValue BS.ByteString
   deriving (Eq, Show, Typeable)
 
-instance Binary HashValue where
-  put (HashValue digest) = put digest
-  get = do
-    digest <- get
+instance Serialise HashValue where
+  encode (HashValue digest) = encode digest
+  decode = do
+    digest <- decode
     -- Cannot do any sensible validation here. Although we use SHA256
     -- for stuff we hash ourselves, we can also get hashes from TUF
     -- and that can in principle use different hash functions in future.

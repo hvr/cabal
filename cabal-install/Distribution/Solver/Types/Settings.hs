@@ -13,8 +13,8 @@ module Distribution.Solver.Types.Settings
     ) where
 
 import Distribution.Simple.Setup ( BooleanFlag(..) )
-import Distribution.Compat.Binary (Binary(..))
 import GHC.Generics (Generic)
+import Codec.Serialise (Serialise)
 
 newtype ReorderGoals = ReorderGoals Bool
   deriving (BooleanFlag, Eq, Generic, Show)
@@ -43,11 +43,11 @@ newtype EnableBackjumping = EnableBackjumping Bool
 newtype SolveExecutables = SolveExecutables Bool
   deriving (BooleanFlag, Eq, Generic, Show)
 
-instance Binary ReorderGoals
-instance Binary CountConflicts
-instance Binary IndependentGoals
-instance Binary AvoidReinstalls
-instance Binary ShadowPkgs
-instance Binary StrongFlags
-instance Binary AllowBootLibInstalls
-instance Binary SolveExecutables
+instance Serialise ReorderGoals
+instance Serialise CountConflicts
+instance Serialise IndependentGoals
+instance Serialise AvoidReinstalls
+instance Serialise ShadowPkgs
+instance Serialise StrongFlags
+instance Serialise AllowBootLibInstalls
+instance Serialise SolveExecutables

@@ -121,6 +121,8 @@ data License =
   | UnknownLicense String
   deriving (Generic, Read, Show, Eq, Typeable, Data)
 
+instance Serialise License
+
 instance Binary License
 
 -- | The list of all currently recognised licenses.

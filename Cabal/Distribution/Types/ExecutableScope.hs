@@ -29,6 +29,7 @@ instance Text ExecutableScope where
     ]
 
 instance Binary ExecutableScope
+instance Serialise ExecutableScope
 
 instance Monoid ExecutableScope where
     mempty = ExecutableScopeUnknown

@@ -29,4 +29,5 @@ instance Text ForeignLibOption where
     ]
 
 instance Binary ForeignLibOption
+instance Serialise ForeignLibOption
 

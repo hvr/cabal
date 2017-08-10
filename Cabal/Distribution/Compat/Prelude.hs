@@ -37,7 +37,8 @@ module Distribution.Compat.Prelude (
     Data,
     Generic,
     NFData (..), genericRnf,
-    Binary (..),
+    Binary (put,get),
+    Serialise (..),
     Alternative (..),
     MonadPlus (..),
     IsString (..),
@@ -117,6 +118,7 @@ import Control.Applicative           (Alternative (..))
 import Control.DeepSeq               (NFData (..))
 import Data.Data                     (Data)
 import Data.Typeable                 (Typeable)
+import Codec.Serialise               (Serialise (..))
 import Distribution.Compat.Binary    (Binary (..))
 import Distribution.Compat.Semigroup (Semigroup (..), gmappend, gmempty)
 import GHC.Generics                  (Generic, Rep(..),

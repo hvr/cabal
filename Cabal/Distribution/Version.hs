@@ -152,6 +152,8 @@ instance Read Version where
 
 instance Binary Version
 
+instance Serialise Version
+
 instance NFData Version where
     rnf (PV0 _) = ()
     rnf (PV1 _ ns) = rnf ns
@@ -300,6 +302,8 @@ data VersionRange
   | IntersectVersionRanges VersionRange VersionRange
   | VersionRangeParens     VersionRange -- just '(exp)' parentheses syntax
   deriving (Data, Eq, Generic, Read, Show, Typeable)
+
+instance Serialise VersionRange
 
 instance Binary VersionRange
 
