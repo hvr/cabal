@@ -18,7 +18,7 @@ Author:             Cabal Development Team (see AUTHORS file)
 Maintainer:         Cabal Development Team <cabal-devel@haskell.org>
 Copyright:          2003-2019, Cabal Development Team
 Category:           Distribution
-Build-type:         Custom
+Build-type:         Simple
 Extra-Source-Files:
   README.md bash-completion/cabal bootstrap.sh changelog
 
