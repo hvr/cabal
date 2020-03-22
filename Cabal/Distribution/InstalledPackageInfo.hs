@@ -102,7 +102,11 @@ parseInstalledPackageInfo s = case P.readFields (toUTF8BS s) of
     Right fs -> case partitionFields fs of
         (fs', _) -> case P.runParseResult $ parseFieldGrammar cabalSpecLatest fs' ipiFieldGrammar of
             (ws, Right x) -> Right (ws', x) where
-                ws' = map (P.showPWarning "") ws
+                ws' = [ P.showPWarning "" w
+                      | w@(P.PWarning wt _ _) <- ws
+                      -- filter out warnings about experimental features
+                      , wt /= P.PWTExperimental
+                      ]
             (_,  Left (_, errs)) -> Left errs' where
                 errs' = map (P.showPError "") errs
 

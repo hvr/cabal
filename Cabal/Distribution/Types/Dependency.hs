@@ -116,7 +116,8 @@ instance Parsec Dependency where
         libs <- option [LMainLibName]
               $ (char ':' *>)
               $ versionGuardMultilibs
-              $ pure <$> parseLib name <|> parseMultipleLibs name
+              $ do parsecWarning PWTExperimental "colon specifier is experimental feature (issue #5660)"
+                   pure <$> parseLib name <|> parseMultipleLibs name
 
         spaces -- https://github.com/haskell/cabal/issues/5846
 
